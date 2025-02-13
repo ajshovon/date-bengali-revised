@@ -16,6 +16,9 @@ const MILLISECONDS_PER_DAY = 86400000
 const monthDaysNorm = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30]
 const monthDaysLeap = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30]
 
+const monthDaysNormPost19 = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 30]
+const monthDaysLeapPost19 = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30]
+
 const isLeapYear = (year) => ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)
 const UTC6 = 6 // timezone offset UTC+6
 const toEpoch = year => Date.UTC(year, 3, 13, UTC6)
@@ -44,9 +47,7 @@ export class CalendarBengaliRevised {
    * @return {Object} this
    */
   fromGregorian (year, month, day) {
-    const monthDays = isLeapYear(year)
-      ? monthDaysLeap
-      : monthDaysNorm
+    const monthDays = year < 2019 ? (isLeapYear(year) ? monthDaysLeap : monthDaysNorm) : (isLeapYear(year) ? monthDaysLeapPost19 : monthDaysNormPost19)
 
     let _year = year
     if (month < 4 || (month === 4 && day < 14)) {
@@ -102,9 +103,7 @@ export class CalendarBengaliRevised {
     const year = this.year + YEAR0
     const epoch = toEpoch(year)
     const _year = this.month > 10 ? year + 1 : year
-    const monthDays = isLeapYear(_year)
-      ? monthDaysLeap
-      : monthDaysNorm
+    const monthDays = _year < 2019 ? (isLeapYear(_year) ? monthDaysLeap : monthDaysNorm) : (isLeapYear(_year) ? monthDaysLeapPost19 : monthDaysNormPost19)
 
     let days = this.day
     for (let i = 0; i < this.month - 1; i++) {
